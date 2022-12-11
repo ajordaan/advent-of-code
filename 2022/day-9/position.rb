@@ -35,10 +35,10 @@ class Position
     puts 'moving 2' if name == 2
     if in_same_row? leader
       puts 'in same row as 1' if name == 2
-      move(below?(leader) ? :U : :D)
+      move(left_of?(leader) ? :R : :L)
     elsif in_same_column? leader
       puts 'in same column as 1' if name == 2
-      move(left_of?(leader) ? :R : :L)
+      move(below?(leader) ? :U : :D)
     else
         puts 'in different row' if name == 2
       if below? leader
@@ -74,11 +74,11 @@ class Position
   end
 
   def in_same_row?(other)
-    x == other.x
+    y == other.y
   end
 
   def in_same_column?(other)
-    y == other.y
+    x == other.x
   end
 
   def left_of?(other)
