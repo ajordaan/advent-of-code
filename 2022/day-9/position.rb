@@ -4,10 +4,11 @@ class Position
 
   DIRECTIONS = { U: { coordinate: :y, operator: :+ }, D: { coordinate: :y, operator: :- }, L: { coordinate: :x, operator: :- }, R: { coordinate: :x, operator: :+ } }
 
-  def initialize(x: 0,y: 0, name:)
+  def initialize(x: 0,y: 0, name:, follows: nil)
     @x = x
     @y = y
     @name = name
+    @follows = follows
 
     @moves = Set.new
   end
