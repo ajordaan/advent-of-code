@@ -1,6 +1,6 @@
 require 'set'
 
-class Position
+class Knot
 
   DIRECTIONS = { U: { coordinate: :y, operator: :+ }, D: { coordinate: :y, operator: :- }, L: { coordinate: :x, operator: :- }, R: { coordinate: :x, operator: :+ } }
 

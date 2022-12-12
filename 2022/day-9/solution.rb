@@ -1,11 +1,11 @@
-require_relative 'position'
+require_relative 'knot'
 
 START_X = 11
 START_Y = 5
 NUMBER_OF_KNOTS = 9
 def part_one
-  tail = Position.new x: START_X, y: START_Y, name: 'T'
-  head = Position.new x: START_X, y: START_Y, name: 'H', follower: tail
+  tail = Knot.new x: START_X, y: START_Y, name: 'T'
+  head = Knot.new x: START_X, y: START_Y, name: 'H', follower: tail
 
   tail.count_move "#{START_X},#{START_Y}"
 
@@ -22,11 +22,10 @@ def part_one
 
     distance.times do
       head.move direction
-
-      puts ' '
-      print_grid knots
-      puts ' '
     end
+
+    print_grid knots
+    puts ' '
   end
 
   puts "Moves: "
@@ -34,11 +33,11 @@ def part_one
 end
 
 def part_two
-  head = Position.new x: START_X, y: START_Y, name: 'H', follower: nil
+  head = Knot.new x: START_X, y: START_Y, name: 'H', follower: nil
   prev_knot = nil
   knots = []
   NUMBER_OF_KNOTS.downto(1) do |n|
-    k = Position.new x: START_X, y: START_Y, name: n, follower: prev_knot
+    k = Knot.new x: START_X, y: START_Y, name: n, follower: prev_knot
     knots << k
     prev_knot = k
   end
@@ -47,8 +46,6 @@ def part_two
   knots << head
   knots.reverse!
   knots.each {|k| k.count_move("#{START_X},#{START_Y}")}
-
-  puts knots
 
   puts "== INITIAL STATE ==\n"
   print_grid knots
@@ -104,4 +101,7 @@ def print_tail_positions(positions, grid_rows = 21, grid_cols = 25)
   end
 end
 
+puts "== PART ONE =="
+part_one
+puts " == PART TWO =="
 part_two
