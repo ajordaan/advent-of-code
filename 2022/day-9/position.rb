@@ -16,41 +16,30 @@ class Position
   attr_reader :x, :y, :name, :moves
   attr_accessor :follower
 
-  def move(direction)
+  def move(direction, intermediate_move = false)
     move_direction = DIRECTIONS[direction.to_sym]
     update_coordinate move_direction[:coordinate], move_direction[:operator]
 
-    follower.follow self if follower
+    follower.follow self if follower && !intermediate_move
   end
 
   def follow(leader)
-    if name == 2
-      puts '2 following'
-
-      puts leader.to_s
-      puts to_s
-    end
     return if next_to? leader
   
-    puts 'moving 2' if name == 2
     if in_same_row? leader
-      puts 'in same row as 1' if name == 2
       move(left_of?(leader) ? :R : :L)
     elsif in_same_column? leader
-      puts 'in same column as 1' if name == 2
       move(below?(leader) ? :U : :D)
     else
-        puts 'in different row' if name == 2
       if below? leader
-        puts '2 is below' if name == 2
-        move :U
+        move :U, true
       else
-        move :D
+        move :D, true
       end
         move(left_of?(leader) ? :R : :L)
     end
   
-    count_move "(#{x},#{y})"
+    count_move "#{x},#{y}"
   end
 
   def count_move(coords)
