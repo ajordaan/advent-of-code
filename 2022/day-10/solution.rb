@@ -1,11 +1,16 @@
 require_relative 'clock_circuit'
+require_relative '../utils'
+
 CYCLE_MEASURE_INCREMENTS = [20,60,100,140,180,220]
-
+CRT_ROW_SIZE = 40
+DEBUG = FALSE
 def part_one
-  clock = ClockCircuit.new
+  clock = ClockCircuit.new debug: DEBUG
 
-  File.foreach('input.txt') do |l|
+  File.foreach('example_input.txt') do |l|
     command = l.split ' '
+
+    log "Cycle: #{clock.current_cycle}"
 
     command_name = command[0]
     command_value = command[1]&.to_i
@@ -13,24 +18,30 @@ def part_one
     case command_name
     when 'addx'
       clock.tick
-      clock.update_register command_value
-      clock.tick
+      clock.tick command_value
     when 'noop'
       clock.tick
     end
   end
 
+  clock.finish_drawing_pixels
+
+  puts "=== CRT ==="
+
+  clock.crt_rows.each {|row| puts row}
+
   total_signal_strength = 0
   
   for x in CYCLE_MEASURE_INCREMENTS
-    puts "Cycle #{x}"
-    puts "X = #{clock.cycles[x]}"
+    log "Cycle #{x}"
+    log "X = #{clock.cycles[x]}"
     total_signal_strength += clock.signal_strength_at x
   end
 
   puts "Signal Strengths: "
   puts total_signal_strength
-    return clock.cycles
+
+  return clock.cycles
 end
 
 def print_cycles(cycles)
@@ -38,6 +49,10 @@ def print_cycles(cycles)
     next if index == 0
     puts "Cycle #{index}: X = #{value}"
   end
+end
+
+def log(s)
+  puts s if DEBUG
 end
 
 def part_one_test
@@ -58,45 +73,7 @@ def part_one_test
     end
 
   end
-  # if result == expected_value
-  #   puts "PASS".green
-  # else  
-  #   puts "FAIL".red
-  #   puts "Expected #{expected_value}, got #{result}"
-  # end
-
   puts "======================"
-end
-
-
-class String
-  def colorize(color_code)
-    "\e[#{color_code}m#{self}\e[0m"
-  end
-
-  def red
-    colorize(31)
-  end
-
-  def green
-    colorize(32)
-  end
-
-  def yellow
-    colorize(33)
-  end
-
-  def blue
-    colorize(34)
-  end
-
-  def pink
-    colorize(35)
-  end
-
-  def light_blue
-    colorize(36)
-  end
 end
 
 part_one
