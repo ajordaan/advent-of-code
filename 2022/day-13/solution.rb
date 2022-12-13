@@ -19,9 +19,28 @@ def part_one
 
   puts correct_indexes.sum
 
- answer = packets.filter {|p| p.correct_order}.reduce(0) {|sum, pair| sum += pair.index}
+  answer = packets.filter {|p| p.correct_order}.reduce(0) {|sum, pair| sum += pair.index}
 
- puts answer
+  puts answer
+end
+
+def part_two
+  all_packets = []
+  packets = load_packets 'input.txt'
+  correct_indexes = []
+  packets.each do |pair|
+    all_packets << pair.left
+    all_packets << pair.right
+  end
+
+  all_packets.append([[2]])
+  all_packets.append([[6]])
+
+  sorted = all_packets.sort {|a,b| compare_packets(a,b) }
+
+  p2_answer = (sorted.find_index([[2]]) + 1) * (sorted.find_index([[6]]) + 1)
+
+  puts p2_answer
 end
 
 def compare_packets(left, right)
