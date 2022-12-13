@@ -15,10 +15,6 @@ def part_one
     pair.correct_order = result == -1
   end
 
-  puts correct_indexes
-
-  puts correct_indexes.sum
-
   answer = packets.filter {|p| p.correct_order}.reduce(0) {|sum, pair| sum += pair.index}
 
   puts answer
