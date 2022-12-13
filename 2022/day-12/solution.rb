@@ -1,31 +1,6 @@
-require_relative 'node'
-require_relative '../utils'
-INFINITY = 9999999
 
-def valid_move?(prev, n, grid_values)
-
-  unless (grid_values[n].ord - grid_values[prev].ord) <= 1 
-    return false
-  end
-
-  moves = 0
-  if prev.split(',')[0].to_i > n.split(',')[0].to_i
-    moves += 1
-  end
-  if prev.split(',')[0].to_i < n.split(',')[0].to_i
-    moves += 1
-  end
-  if prev.split(',')[1].to_i < n.split(',')[1].to_i
-    moves += 1
-  end
-  if prev.split(',')[1].to_i > n.split(',')[1].to_i
-    moves += 1
-  end
-
-  moves < 2
-end
-
-grid = File.readlines('input.txt').map {|line| line.strip.chars}
+def init
+  grid = File.readlines('input.txt').map {|line| line.strip.chars}
 p grid
 nodes = []
 id = 1
@@ -84,8 +59,34 @@ grid_values[dest] = 'z'
 puts "Start: #{start}"
 puts "Dest: #{dest}"
 
+[nodes, node_siblings, grid_values, start, dest]
+end
 
-visited = {}
+def valid_move?(prev, n, grid_values)
+
+  unless (grid_values[n].ord - grid_values[prev].ord) <= 1 
+    return false
+  end
+
+  moves = 0
+  if prev.split(',')[0].to_i > n.split(',')[0].to_i
+    moves += 1
+  end
+  if prev.split(',')[0].to_i < n.split(',')[0].to_i
+    moves += 1
+  end
+  if prev.split(',')[1].to_i < n.split(',')[1].to_i
+    moves += 1
+  end
+  if prev.split(',')[1].to_i > n.split(',')[1].to_i
+    moves += 1
+  end
+
+  moves < 2
+end
+
+def bfs(node_siblings, grid_values, start, dest)
+  visited = {}
 
 queue = [[start, 0]]
 found = false
@@ -93,7 +94,6 @@ found = false
 puts "Queue: #{queue}"
 until queue.empty? || found
   curr = queue.shift
-
   curr_position = curr[0]
 
   valid_siblings = node_siblings[curr_position].filter {|sib| valid_move?(curr_position, sib, grid_values)}
@@ -113,3 +113,8 @@ until queue.empty? || found
     end
   end
 end
+end
+
+nodes, node_siblings, grid_values, start, dest = init()
+
+bfs(node_siblings, grid_values, start, dest)
