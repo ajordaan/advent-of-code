@@ -11,8 +11,8 @@ def part_one
     result = compare_packets(pair.left, pair.right) 
     puts "\n#{result}\n"
 
-    correct_indexes << pair.index if result
-    pair.correct_order = result
+    correct_indexes << pair.index if result == -1
+    pair.correct_order = result == -1
   end
 
   puts correct_indexes
@@ -28,43 +28,46 @@ def compare_packets(left, right)
   puts "TOP: comparing #{left} vs #{right}"
 
   if left.kind_of?(Integer) && right.kind_of?(Integer)
-    puts "Comparing #{left} vs #{right}"
-    puts "Left side is smaller, so inputs are in the right order" if left < right
-    return true if left < right
-    puts "Right side is smaller, so inputs are not in the right order" if left > right
-    return false if left > right
-   
-    return nil
+   if left < right
+    return -1
+   elsif left == right
+    return 0
+   else
+    return 1
+   end
   end
 
   if left.kind_of?(Array) && right.kind_of?(Array)
-    puts "Left side ran out of items so items in the correct order" if left.empty? && right.any?
-    return right.any? if left.empty? 
-    puts "Right side ran out of items, so inputs are not in the right order" if right.empty? && left.any? 
-    return false if right.empty? && left.any? 
-    smaller = left.size < right.size ? left.size : right.size
-
     i = 0
-    while i < smaller
-      res = compare_packets(left.at(i), right.at(i))
-      return res unless res.nil?
+
+    while i< left.size && i < right.size
+      c = compare_packets(left[i], right[i])
+
+      if c == -1
+        return -1
+      end
+      if c == 1
+        return 1
+      end
+
       i += 1
     end
 
-    return true if i == left.size && i < right.size
-    return false if i == right.size && i < left.size
-
-    return nil
+    if i == left.size && i < right.size
+      return -1
+    elsif i == right.size && i < left.size
+      return 1
+    else
+      return 0
+    end
   end
 
   if left.kind_of?(Array) && right.kind_of?(Integer)
-    puts "Mixed types; convert right to [#{right}] and retry comparison"
-    return compare_packets(left, [right])
+    return compare_packets left, [right]
   end
 
   if left.kind_of?(Integer) && right.kind_of?(Array)
-    puts "Mixed types; convert left to [#{left}] and retry comparison"
-    return compare_packets([left], right)
+    return compare_packets [left], right
   end
 
 end
