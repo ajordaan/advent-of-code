@@ -91,7 +91,6 @@ def bfs(node_siblings, grid_values, start, dest)
 queue = [[start, 0]]
 found = false
 
-puts "Queue: #{queue}"
 until queue.empty? || found
   curr = queue.shift
   curr_position = curr[0]
@@ -100,11 +99,8 @@ until queue.empty? || found
 
   valid_siblings.each do |sibling|
     if sibling == dest
-      puts "\n\n\n FOUND \n\n\n"
-      puts (curr[1] + 1)
-
-      p queue
       found = true
+      return (curr[1] + 1)
     end
 
     unless visited.has_key? sibling
@@ -118,3 +114,11 @@ end
 nodes, node_siblings, grid_values, start, dest = init()
 
 bfs(node_siblings, grid_values, start, dest)
+
+starts = nodes.filter {|n| grid_values[n] == 'a'}
+
+res = starts.map {|s| bfs(node_siblings, grid_values, s, dest)}
+
+p res
+
+p res.compact.min
