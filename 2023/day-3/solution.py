@@ -22,6 +22,41 @@ def part_one(filename):
     print(sum(parts))
 
 
+def part_two(filename):
+    engine = []
+    gears = []
+    with open(filename) as f:
+        for line in f:
+            engine.append(list(line))
+    for i, row in enumerate(engine):
+        for k, character in enumerate(row):
+            if char_is_gear(character):
+                number_indexes = find_adjacent_number_indexes(engine, i, k)
+                gear_number_sets = set()
+                for index in number_indexes:
+                    number, visited_indexes = extract_number_from_index(engine, index)
+                    gear_number_sets.add((number, tuple(visited_indexes)))
+                gears.append(gear_number_sets)
+
+    print(gears)
+
+    filtered_gears = list(filter(lambda s: len(s) == 2, gears))
+    print(filtered_gears)
+
+    gear_ratios = []
+    for s in filtered_gears:
+        product = 1
+        for t in s:
+            product *= t[0]
+        gear_ratios.append(product)
+
+    print(filtered_gears)
+    print('gear ratios: ', gear_ratios)
+    print('answer: ', sum(gear_ratios))
+
+def char_is_gear(char) -> bool:
+    return char == '*'
+
 def char_is_symbol(char) -> bool:
     if char == "." or char == "" or char == "\n":
         return False
@@ -89,8 +124,6 @@ def element_is_number(engine, row, col) -> bool:
         return False
 
 
-def part_two(filename):
-    pass
 
-
-part_one("input.txt")
+# part_one("input.txt")
+part_two("input.txt")
